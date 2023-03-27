@@ -17,7 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -25,15 +25,29 @@ import "assets/scss/argon-dashboard-react.scss";
 
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
+import { AuthProvider } from "context/AuthContext";
+import Login from "views/examples/Login";
+import ProtectGuest from "layouts/protections/ProtectGuest";
+import ProtectAdmin from "layouts/protections/ProtectAdmin";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <BrowserRouter>
-    <Switch>
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
-      <Redirect from="/" to="/admin/index" />
-    </Switch>
+    <AuthProvider>
+      <Routes>
+        <Route element={<ProtectAdmin />}>
+          <Route path="/admin/*" element={<AdminLayout />} />
+        </Route>
+
+        <Route path="/auth/*" element={<AuthLayout />} />
+
+        <Route path="*" element={<Navigate replace to="/auth/index" />} />
+      </Routes>
+    </AuthProvider>
   </BrowserRouter>
 );

@@ -51,7 +51,7 @@ import {
   Row,
   Col
 } from "reactstrap";
-
+import useAuthContext from "context/AuthContext";
 var ps;
 
 const Sidebar = (props) => {
@@ -70,16 +70,18 @@ const Sidebar = (props) => {
   };
   // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
-    return routes.map((prop, key) => {
+    //excluding register routes
+    const newroutes = routes.filter((route) => route.path !== "/register");
+    return newroutes.map((prop, key) => {
       return (
         <NavItem key={key}>
           <NavLink
             to={prop.layout + prop.path}
             tag={NavLinkRRD}
             onClick={closeCollapse}
-            activeClassName="active"
+            className={(navData) => (navData.isActive ? "active" : "")}
           >
-            <i className={prop.icon} />
+            {prop.icon}
             {prop.name}
           </NavLink>
         </NavItem>
@@ -100,7 +102,14 @@ const Sidebar = (props) => {
       target: "_blank"
     };
   }
-
+  const { logout } = useAuthContext();
+  const handlelogout = async () => {
+    try {
+      await logout();
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <Navbar
       className="navbar-vertical fixed-left navbar-light bg-white"
@@ -124,6 +133,7 @@ const Sidebar = (props) => {
               className="navbar-brand-img"
               src={logo.imgSrc}
             />
+            <b>N W T</b>
           </NavbarBrand>
         ) : null}
         {/* User */}
@@ -149,7 +159,7 @@ const Sidebar = (props) => {
                 <span className="avatar avatar-sm rounded-circle">
                   <img
                     alt="..."
-                    src={require("../../assets/img/theme/team-1-800x800.jpg")}
+                    src={require("../../assets/img/brand/New Wave logo.jpg")}
                   />
                 </span>
               </Media>
@@ -230,31 +240,42 @@ const Sidebar = (props) => {
           </Form>
           {/* Navigation */}
           <Nav navbar>{createLinks(routes)}</Nav>
-          {/* Divider */}
-          <hr className="my-3" />
-          {/* Heading */}
-          <h6 className="navbar-heading text-muted">Documentation</h6>
-          {/* Navigation */}
           <Nav className="mb-md-3" navbar>
             <NavItem>
+              <div style={{ cursor: "pointer" }} onClick={handlelogout}>
+                <NavLink>
+                  <i className="ni ni-circle-08 text-pink" />
+                  logout
+                </NavLink>
+              </div>
+            </NavItem>
+          </Nav>
+
+          {/* Divider */}
+          {/* <hr className="my-3" /> */}
+          {/* Heading */}
+          {/* <h6 className="navbar-heading text-muted">Documentation</h6> */}
+          {/* Navigation */}
+          {/* <Nav className="mb-md-3" navbar> */}
+          {/* <NavItem>
               <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar">
                 <i className="ni ni-spaceship" />
                 Getting started
               </NavLink>
-            </NavItem>
-            <NavItem>
+            </NavItem> */}
+          {/* <NavItem>
               <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/colors?ref=adr-admin-sidebar">
                 <i className="ni ni-palette" />
                 Foundation
               </NavLink>
-            </NavItem>
-            <NavItem>
+            </NavItem> */}
+          {/* <NavItem>
               <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/alerts?ref=adr-admin-sidebar">
                 <i className="ni ni-ui-04" />
                 Components
               </NavLink>
-            </NavItem>
-          </Nav>
+            </NavItem> */}
+          {/* </Nav>
           <Nav className="mb-md-3" navbar>
             <NavItem className="active-pro active">
               <NavLink href="https://www.creative-tim.com/product/argon-dashboard-pro-react?ref=adr-admin-sidebar">
@@ -262,7 +283,7 @@ const Sidebar = (props) => {
                 Upgrade to PRO
               </NavLink>
             </NavItem>
-          </Nav>
+          </Nav> */}
         </Collapse>
       </Container>
     </Navbar>

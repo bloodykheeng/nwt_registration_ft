@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // reactstrap components
 import {
   Button,
@@ -31,13 +13,41 @@ import {
   Row,
   Col
 } from "reactstrap";
+import { useState, useEffect } from "react";
+import AxiosApi from "services/api/AxiosApi";
+import { useNavigate } from "react-router-dom";
+import useAuthContext from "../../context/AuthContext";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [rememberMe, setRememberMe] = useState();
+  const [type, setType] = useState(false);
+
+  const { login, errors, isLoading, getUser, user } = useAuthContext();
+
+  useEffect(() => {
+    //check if user is still logged in
+
+    const checkuser = async () => {
+      const { data } = await AxiosApi.get("/api/user");
+      if (data) {
+        navigate("/admin/dashboard");
+      }
+      console.log("user : ", data);
+    };
+    checkuser();
+  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    login({ email, password });
+  };
   return (
     <>
       <Col lg="5" md="7">
         <Card className="bg-secondary shadow border-0">
-          <CardHeader className="bg-transparent pb-5">
+          {/* <CardHeader className="bg-transparent pb-5">
             <div className="text-muted text-center mt-2 mb-3">
               <small>Sign in with</small>
             </div>
@@ -77,11 +87,16 @@ const Login = () => {
                 <span className="btn-inner--text">Google</span>
               </Button>
             </div>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <small>Or sign in with credentials</small>
+              <small>sign in with Your credentials</small>
             </div>
+            {isLoading && (
+              <div>
+                <h3>loading...</h3>
+              </div>
+            )}
             <Form role="form">
               <FormGroup className="mb-3">
                 <InputGroup className="input-group-alternative">
@@ -91,31 +106,53 @@ const Login = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Email"
-                    type="email"
+                    placeholder="UserName / Email"
+                    type="text"
                     autoComplete="new-email"
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </InputGroup>
+                {errors && (
+                  <small className="text-danger">
+                    {Array.isArray(errors?.email)
+                      ? errors?.email[0]
+                      : errors?.email}
+                  </small>
+                )}
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
+                      <span
+                        onClick={() => setType(!type)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <i className="ni ni-lock-circle-open" />
+                      </span>
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
                     placeholder="Password"
-                    type="password"
+                    type={!type ? "password" : "text"}
                     autoComplete="new-password"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </InputGroup>
+                {errors && (
+                  <small className="text-danger">
+                    {Array.isArray(errors?.password)
+                      ? errors?.password[0]
+                      : errors?.password}
+                  </small>
+                )}
               </FormGroup>
               <div className="custom-control custom-control-alternative custom-checkbox">
                 <input
                   className="custom-control-input"
                   id=" customCheckLogin"
                   type="checkbox"
+                  onChange={(e) => setRememberMe(e.target.value)}
                 />
                 <label
                   className="custom-control-label"
@@ -125,7 +162,12 @@ const Login = () => {
                 </label>
               </div>
               <div className="text-center">
-                <Button className="my-4" color="primary" type="button">
+                <Button
+                  onClick={handleSubmit}
+                  className="my-4"
+                  color="primary"
+                  type="button"
+                >
                   Sign in
                 </Button>
               </div>
