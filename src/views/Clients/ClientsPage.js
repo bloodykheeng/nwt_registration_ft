@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+
 import MuiTable from "components/MuiTable";
 import Header from "components/Headers/Header";
 import {
@@ -37,6 +43,15 @@ import {
 } from "services/client-details/client-details";
 
 import PasswordIcon from "@mui/icons-material/Password";
+import CustomDatePicker from "components/DatePicker/CustomDatePicker";
+import CustomModal from "components/CustomModal/CustomModal";
+import ClientsServicesForm from "./ClientsServicesForm";
+
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 
 function ClientsPage() {
   const columns = [
@@ -50,9 +65,13 @@ function ClientsPage() {
     {
       title: "Created At",
       field: "created_at",
-      render: (rowData) => {
-        return moment(rowData.created_at).format("lll");
-      },
+      type: "datetime",
+      // render: (rowData) => {
+      //   return moment(rowData.created_at).format("lll");
+      // },
+      // type: "date",
+      dateSetting: { locale: "en-GB" },
+      filterComponent: (props) => <CustomDatePicker {...props} />,
       cellStyle: {
         minWidth: 210,
         maxWidth: 210
@@ -62,34 +81,23 @@ function ClientsPage() {
     {
       title: "Updated At",
       field: "updated_at",
-      render: (rowData) => {
-        return moment(rowData.updated_at).format("lll");
-      },
+      // render: (rowData) => {
+      //   return moment(rowData.updated_at).format("lll");
+      // },
       cellStyle: {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      type: "datetime",
+      dateSetting: { locale: "en-GB" },
+      filterComponent: (props) => <CustomDatePicker {...props} />
     }
   ];
   const [tableData, setTableData] = useState();
   const [tableColumns, setTableColumns] = useState(columns);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState();
-
-  //fetching admin data
-  // const getAllAdmins = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     let response = await getAllAdmin();
-  //     console.log("reponse for fetching admins : ", response);
-  //     setTableData(response.data);
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     setIsLoading(false);
-  //     console.log(error);
-  //   }
-  // };
 
   //fetching allClient data
   const getAllClients = async () => {
@@ -151,6 +159,12 @@ function ClientsPage() {
     }
   };
 
+  const [openCustomModal, setOpenCustomModal] = useState();
+  const [value, setValue] = useState("1");
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
     <>
       <Header />
@@ -176,7 +190,36 @@ function ClientsPage() {
                 tableRowAdd={handleAddRow}
                 tableRowUpdate={handleRowUpdate}
                 tableRowDelete={handleRowDelete}
+                showAddMoreServices={true}
+                handleAddMoreServices={(e, data) => {
+                  console.log("the data when adding more services");
+                  setOpenCustomModal(true);
+                }}
               />
+              <CustomModal
+                open={openCustomModal}
+                handleClose={() => setOpenCustomModal(false)}
+              >
+                <Box sx={{ width: "100%", typography: "body1" }}>
+                  <TabContext value={value}>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                      <TabList
+                        onChange={handleChange}
+                        aria-label="lab API tabs example"
+                      >
+                        <Tab label="Form" value="1" />
+                        <Tab label="Services" value="2" />
+                        {/* <Tab label="Item Three" value="3" /> */}
+                      </TabList>
+                    </Box>
+                    <TabPanel value="1">
+                      <ClientsServicesForm />
+                    </TabPanel>
+                    <TabPanel value="2">Item Two</TabPanel>
+                    <TabPanel value="3">Item Three</TabPanel>
+                  </TabContext>
+                </Box>
+              </CustomModal>
             </Card>
           </div>
         </Row>

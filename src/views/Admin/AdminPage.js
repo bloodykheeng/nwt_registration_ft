@@ -28,6 +28,7 @@ import {
   deleteAdmin
 } from "../../services/admin/admins-service";
 import PasswordIcon from "@mui/icons-material/Password";
+import CustomDatePicker from "components/DatePicker/CustomDatePicker";
 
 function AdminPage() {
   const columns = [
@@ -50,9 +51,13 @@ function AdminPage() {
     {
       title: "Created At",
       field: "created_at",
-      render: (rowData) => {
-        return moment(rowData.created_at).format("lll");
-      },
+      type: "datetime",
+      // render: (rowData) => {
+      //   return moment(rowData.created_at).format("lll");
+      // },
+      // type: "date",
+      dateSetting: { locale: "en-GB" },
+      filterComponent: (props) => <CustomDatePicker {...props} />,
       cellStyle: {
         minWidth: 210,
         maxWidth: 210
@@ -62,14 +67,17 @@ function AdminPage() {
     {
       title: "Updated At",
       field: "updated_at",
-      render: (rowData) => {
-        return moment(rowData.updated_at).format("lll");
-      },
+      // render: (rowData) => {
+      //   return moment(rowData.updated_at).format("lll");
+      // },
       cellStyle: {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      type: "datetime",
+      dateSetting: { locale: "en-GB" },
+      filterComponent: (props) => <CustomDatePicker {...props} />
     }
   ];
   const [tableData, setTableData] = useState();

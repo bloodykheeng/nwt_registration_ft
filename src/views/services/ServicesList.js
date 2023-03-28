@@ -101,6 +101,7 @@ import {
   updateServiceStates,
   deleteServiceStates
 } from "services/service-states/service-states";
+import CustomDatePicker from "components/DatePicker/CustomDatePicker";
 
 function ServicesList() {
   const columns = [
@@ -109,8 +110,8 @@ function ServicesList() {
       field: "service_types_id",
       lookup: lookupData
     },
-    { title: "start_date", field: "start_date" },
-    { title: "end_date", field: "end_date" },
+    { title: "start_date", field: "start_date", type: "datetime" },
+    { title: "end_date", field: "end_date", type: "datetime" },
     { title: "tax", field: "tax" },
     { title: "quantity ", field: "quantity" },
     { title: "price", field: "price" },
@@ -120,11 +121,15 @@ function ServicesList() {
     { title: "registrars_name", field: "registrars_name", editable: false },
     { title: "registrars_email", field: "registrars_email", editable: false },
     {
-      title: "Created At",
+      title: "Created_At",
       field: "created_at",
-      render: (rowData) => {
-        return moment(rowData.created_at).format("lll");
-      },
+      type: "datetime",
+      // render: (rowData) => {
+      //   return moment(rowData.created_at).format("lll");
+      // },
+      // type: "date",
+      dateSetting: { locale: "en-GB" },
+      filterComponent: (props) => <CustomDatePicker {...props} />,
       cellStyle: {
         minWidth: 210,
         maxWidth: 210
@@ -132,16 +137,19 @@ function ServicesList() {
       editable: false
     },
     {
-      title: "Updated At",
+      title: "Updated_At",
       field: "updated_at",
-      render: (rowData) => {
-        return moment(rowData.updated_at).format("lll");
-      },
+      // render: (rowData) => {
+      //   return moment(rowData.updated_at).format("lll");
+      // },
       cellStyle: {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      type: "datetime",
+      dateSetting: { locale: "en-GB" },
+      filterComponent: (props) => <CustomDatePicker {...props} />
     }
   ];
   const [tableData, setTableData] = useState();
@@ -150,6 +158,7 @@ function ServicesList() {
   const [errors, setErrors] = useState();
   const [lookupData, setLookUpData] = useState();
   console.log("table data is : ", tableData);
+  console.log("lookup data is : ", lookupData);
   //    { id: 2, service_name: "web hosting", registras_id: 1 }
   //fetching Service types data
   const getAllTheServiceTypes = async () => {

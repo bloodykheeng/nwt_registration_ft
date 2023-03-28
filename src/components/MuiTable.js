@@ -1,8 +1,9 @@
 import React, { useEffect, useState, forwardRef, useMemo } from "react";
 import MaterialTable from "@material-table/core";
+// import MaterialTable from "material-table";
 
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
-// import MaterialTable from "material-table";
+
 import { Checkbox, Select, MenuItem } from "@material-ui/core";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
@@ -21,6 +22,8 @@ import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ArrowUpward from "@mui/icons-material/ArrowUpward";
+
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -59,7 +62,9 @@ const MuiTable = ({
   downloadExcel,
   tableRowAdd,
   tableRowUpdate,
-  tableRowDelete
+  tableRowDelete,
+  showAddMoreServices,
+  handleAddMoreServices
 }) => {
   const [mTableActions, setMTableActions] = useState([]);
   console.log("table data is ", tableData);
@@ -80,6 +85,16 @@ const MuiTable = ({
       isFreeAction: false
     };
 
+    let addindmoreservices = showAddMoreServices && {
+      icon: () => <AddCircleIcon style={{ color: "blue" }} />,
+      tooltip: "add services",
+      onClick: (e, data) => handleAddMoreServices(e, data),
+      isFreeAction: false
+    };
+    let mytableactions = [];
+    editingAction && mytableactions.push(editingAction);
+    deletingAction && mytableactions.push(deletingAction);
+    addindmoreservices && mytableactions.push(addindmoreservices);
     // let excelexportingAction = excelexporting && {
     //   icon: () => <FileDownloadIcon />,
     //   tooltip: 'Export to Excel',
@@ -87,7 +102,8 @@ const MuiTable = ({
     //   isFreeAction: true,
     // }
 
-    setMTableActions([{ ...editingAction }, { ...deletingAction }]);
+    // setMTableActions([{ ...editingAction }, { ...deletingAction }]);
+    mytableactions.length > 0 && setMTableActions(mytableactions);
   }, []);
   console.log("mTableActions : ", mTableActions);
 
