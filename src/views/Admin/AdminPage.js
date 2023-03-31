@@ -29,6 +29,8 @@ import {
 } from "../../services/admin/admins-service";
 import PasswordIcon from "@mui/icons-material/Password";
 import CustomDatePicker from "components/DatePicker/CustomDatePicker";
+import Lottie from "lottie-react";
+import AdminLottie from "../../assets/mylotties/42635-office-administration-isometric-concept.json";
 
 function AdminPage() {
   const columns = [
@@ -146,13 +148,26 @@ function AdminPage() {
   // tableRowDelete
   return (
     <>
-      <Header />
+      <Header
+        BackgroundObject={
+          <Lottie
+            animationData={AdminLottie}
+            style={{
+              objectFit: "cover",
+              width: "20%",
+              marginLeft: "20rem"
+            }}
+            loop={true}
+            autoplay={true}
+          />
+        }
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* mui Table */}
         <Row>
           <div className="col">
-            <Card className="shadow">
+            <Card className="shadow" style={{ padding: "1rem" }}>
               <CardHeader className="border-0">
                 <h3 className="mb-0">Administrators</h3>
               </CardHeader>

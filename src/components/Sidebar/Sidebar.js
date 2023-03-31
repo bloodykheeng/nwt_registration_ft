@@ -53,6 +53,7 @@ import {
 } from "reactstrap";
 import useAuthContext from "context/AuthContext";
 var ps;
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const Sidebar = (props) => {
   const [collapseOpen, setCollapseOpen] = useState();
@@ -239,12 +240,18 @@ const Sidebar = (props) => {
             </InputGroup>
           </Form>
           {/* Navigation */}
+
+          {/* Where we create the links from */}
           <Nav navbar>{createLinks(routes)}</Nav>
+          {/* Where we create the links from */}
+
           <Nav className="mb-md-3" navbar>
             <NavItem>
               <div style={{ cursor: "pointer" }} onClick={handlelogout}>
                 <NavLink>
-                  <i className="ni ni-circle-08 text-pink" />
+                  <LogoutIcon
+                    style={{ marginRight: "1rem", color: "purple" }}
+                  />
                   logout
                 </NavLink>
               </div>

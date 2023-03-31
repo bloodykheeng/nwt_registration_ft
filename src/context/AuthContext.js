@@ -14,14 +14,14 @@ export const AuthProvider = ({ children }) => {
   const csrf = () => AxiosApi.get("/sanctum/csrf-cookie");
 
   const getUser = async () => {
-    try{
+    try {
       await csrf();
       const { data } = await AxiosApi.get("/api/user");
       setUser(data);
-    }catch(e){
-      console.log("ërror")
+      return data;
+    } catch (e) {
+      console.log("ërror");
     }
-    
   };
 
   const login = async ({ ...data }) => {
@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }) => {
     AxiosApi.post("/logout")
       .then(() => {
         setUser(null);
+        navigate("/");
         setIsLoading(false);
       })
       .catch((e) => {

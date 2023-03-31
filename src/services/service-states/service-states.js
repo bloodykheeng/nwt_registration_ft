@@ -1,6 +1,5 @@
 import AxiosApi from "services/api/AxiosApi";
 
-
 export async function getAllServiceStates() {
   const response = await AxiosApi.get("/api/servicestate");
   return response;
@@ -22,6 +21,6 @@ export async function updateServiceStates(id, data) {
 }
 
 export async function deleteServiceStates(id) {
-  const response = AxiosApi.delete("/api/servicestate/", +id);
+  const response = AxiosApi.delete("/api/servicestate/" + id);
   return response;
 }

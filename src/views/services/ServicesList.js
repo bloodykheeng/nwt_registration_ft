@@ -92,7 +92,6 @@ import {
   updateClientDetails,
   deleteClientDetails
 } from "services/client-details/client-details";
-import { getAllServiceTypes } from "services/service-types/service-types";
 
 import {
   getAllServiceStates,
@@ -103,21 +102,101 @@ import {
 } from "services/service-states/service-states";
 import CustomDatePicker from "components/DatePicker/CustomDatePicker";
 
-function ServicesList() {
+function ServicesList({ clientInfo, lookupData, clientLookupData }) {
+  console.log("client list : ", clientInfo);
+  console.log("lookupData : ", lookupData);
+  console.log("clientLookupData : ", clientLookupData);
+
+  console.log("{ ...lookupData }", { ...lookupData });
+
+  const daysRemaining = (rowdata) => {
+    var enddate = moment(rowdata.end_date);
+    var startdate = moment(rowdata.start_date);
+    startdate = moment();
+    let yearsleft = enddate.diff(startdate, "years");
+    let monthsleft = enddate.diff(startdate, "months");
+    let weeksleft = enddate.diff(startdate, "weeks");
+    let daysleft = enddate.diff(startdate, "days");
+    let hoursleft = enddate.diff(startdate, "hours");
+    let minutesleft = enddate.diff(startdate, "minutes");
+    let secondsleft = enddate.diff(startdate, "seconds");
+
+    // console.log(
+    //   `Difference is ${enddate.diff(startdate, "days")} milliseconds`
+    // );
+    // console.log(`Difference is ${enddate.diff(startdate, "days")} day(s)`);
+    // console.log(`Difference is ${enddate.diff(startdate, "weeks")} week(s)`);
+    // console.log(`Difference is ${enddate.diff(startdate, "months")} month(s)`);
+    // console.log("the days left are : ", daysleft);
+    return (
+      <small>
+        {yearsleft > 0 && yearsleft + " yr, "}{" "}
+        {monthsleft > 0 && monthsleft + " mths, "}
+        {weeksleft > 0 && weeksleft + " wks, "}
+        {daysleft > 0 && daysleft + " days, "}
+        {hoursleft > 0 && hoursleft + " hrs, "}
+        {minutesleft > 0 && minutesleft + " min, "}
+        {secondsleft > 0 && secondsleft + " sec, "}
+        {secondsleft < 1 && <strong style={{ color: "red" }}>expired</strong>}
+      </small>
+    );
+  };
+
   const columns = [
     {
       title: "service_types_id",
       field: "service_types_id",
-      lookup: lookupData
+      lookup: { ...lookupData },
+      editable: false
     },
-    { title: "start_date", field: "start_date", type: "datetime" },
-    { title: "end_date", field: "end_date", type: "datetime" },
+    {
+      title: "Time Remaining",
+      field: "start_date",
+      type: "text",
+      cellStyle: {
+        minWidth: 220,
+        maxWidth: 220
+      },
+      render: (rowdata) => {
+        return daysRemaining(rowdata);
+      }
+    },
+    {
+      title: "start_date",
+      field: "start_date",
+      type: "datetime",
+      cellStyle: {
+        minWidth: 210,
+        maxWidth: 210
+      }
+    },
+    {
+      title: "end_date",
+      field: "end_date",
+      type: "datetime",
+      cellStyle: {
+        minWidth: 210,
+        maxWidth: 210
+      }
+    },
     { title: "tax", field: "tax" },
     { title: "quantity ", field: "quantity" },
     { title: "price", field: "price" },
     { title: "currency", field: "currency" },
-    { title: "description", field: "description" },
-    { title: "client_id", field: "client_id" },
+    {
+      title: "description",
+      field: "description",
+      cellStyle: {
+        minWidth: 300,
+        maxWidth: 300
+      }
+    },
+    {
+      title: "client_id",
+      field: "client_id",
+      lookup: { ...clientLookupData },
+      editable: false
+    },
     { title: "registrars_name", field: "registrars_name", editable: false },
     { title: "registrars_email", field: "registrars_email", editable: false },
     {
@@ -156,30 +235,13 @@ function ServicesList() {
   const [tableColumns, setTableColumns] = useState(columns);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState();
-  const [lookupData, setLookUpData] = useState();
+
   console.log("table data is : ", tableData);
   console.log("lookup data is : ", lookupData);
   //    { id: 2, service_name: "web hosting", registras_id: 1 }
   //fetching Service types data
-  const getAllTheServiceTypes = async () => {
-    try {
-      setIsLoading(true);
-      let response = await getAllServiceTypes();
-      console.log("reponse for fetching service types : ", response);
-      let status = {};
-      await response.data.map((data) => {
-        return (status[data.id] = data.service_name);
-      });
-      setLookUpData(status);
-      //   setTableData(response.data);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
-    }
-  };
 
-  //fetching allClient data
+  //fetching allServiceStates data
   const getAllServiceStatez = async () => {
     try {
       setIsLoading(true);
@@ -195,7 +257,6 @@ function ServicesList() {
 
   //calling all function synchronusly to fetch data
   const fetchAllTableData = async () => {
-    await getAllTheServiceTypes();
     await getAllServiceStatez();
     return;
   };
@@ -220,6 +281,7 @@ function ServicesList() {
   const handleRowUpdate = async (data) => {
     try {
       setIsLoading(true);
+      console.log("the handleRowUpdate data is : ", data);
       let response = await updateServiceStates(data.id, data);
       console.log("the handleRowUpdate reponse is : ", response);
       setIsLoading(false);
@@ -259,6 +321,8 @@ function ServicesList() {
                 There are semantic errors in your data
               </p>
             )}
+            {isLoading && <h1>isLoading...</h1>}
+
             <MuiTable
               tableColumns={tableColumns}
               tableData={tableData}
@@ -267,6 +331,7 @@ function ServicesList() {
               tableRowAdd={handleAddRow}
               tableRowUpdate={handleRowUpdate}
               tableRowDelete={handleRowDelete}
+              tableTitle="List Of all Registered Services"
             />
           </Card>
         </div>

@@ -21,6 +21,6 @@ export async function updateServiceTypes(id, data) {
 }
 
 export async function deleteServiceTypes(id) {
-  const response = AxiosApi.delete("/api/servicetype/"+id);
+  const response = AxiosApi.delete("/api/servicetype/" + id);
   return response;
 }

@@ -155,6 +155,7 @@ function ServiceTypes() {
               tableRowAdd={handleAddRow}
               tableRowUpdate={handleRowUpdate}
               tableRowDelete={handleRowDelete}
+              tableTitle="List Of all Service Types"
             />
           </Card>
         </div>

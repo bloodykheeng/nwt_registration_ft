@@ -46,10 +46,11 @@ import {
   chartExample1,
   chartExample2
 } from "variables/charts.js";
-
+import InvoiceLayout from "components/invoice/InvoiceLayout";
 import Header from "components/Headers/Header.js";
 import useAuthContext from "context/AuthContext";
-
+import Lottie from "lottie-react";
+import Ocean from "../assets/mylotties/56961-underwater-ocean-fish-and-turtle (1).json";
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
   const [chartExample1Data, setChartExample1Data] = useState("data1");
@@ -72,7 +73,19 @@ const Index = (props) => {
   }, []);
   return (
     <>
-      <Header>
+      <Header
+        BackgroundObject={
+          <Lottie
+            animationData={Ocean}
+            style={{
+              objectFit: "cover",
+              width: "100%"
+            }}
+            loop={true}
+            autoplay={true}
+          />
+        }
+      >
         <Col lg="6" xl="3">
           <Card className="card-stats mb-4 mb-xl-0">
             <CardBody>
@@ -106,7 +119,7 @@ const Index = (props) => {
                     tag="h5"
                     className="text-uppercase text-muted mb-0"
                   >
-                    New users
+                    New Clients
                   </CardTitle>
                   <span className="h2 font-weight-bold mb-0">2,356</span>
                 </div>
@@ -262,7 +275,17 @@ const Index = (props) => {
             </Card>
           </Col>
         </Row>
-        <Row className="mt-5">
+
+        {/* <Row className="mt-5">
+          <Col className="mb-5 mb-xl-0" xl="12">
+            <Card className="shadow">
+              <CardBody>
+                <InvoiceLayout />
+              </CardBody>
+            </Card>
+          </Col>
+        </Row> */}
+        {/* <Row className="mt-5">
           <Col className="mb-5 mb-xl-0" xl="8">
             <Card className="shadow">
               <CardHeader className="border-0">
@@ -447,7 +470,7 @@ const Index = (props) => {
               </Table>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
       </Container>
     </>
   );

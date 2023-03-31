@@ -64,7 +64,12 @@ const MuiTable = ({
   tableRowUpdate,
   tableRowDelete,
   showAddMoreServices,
-  handleAddMoreServices
+  handleAddMoreServices,
+  addindmoreservicesIcon = <AddCircleIcon style={{ color: "blue" }} />,
+  addindmoreservicesTitle = "add services",
+  showRowAdd = true,
+  hideShowRowDelete = false,
+  hideShowRowUpdate = false
 }) => {
   const [mTableActions, setMTableActions] = useState([]);
   console.log("table data is ", tableData);
@@ -86,8 +91,8 @@ const MuiTable = ({
     };
 
     let addindmoreservices = showAddMoreServices && {
-      icon: () => <AddCircleIcon style={{ color: "blue" }} />,
-      tooltip: "add services",
+      icon: () => addindmoreservicesIcon,
+      tooltip: addindmoreservicesTitle,
       onClick: (e, data) => handleAddMoreServices(e, data),
       isFreeAction: false
     };
@@ -121,15 +126,20 @@ const MuiTable = ({
         data={tableData}
         title={tableTitle}
         editable={{
-          onRowAdd: (newData) =>
-            new Promise((resolve, reject) => {
-              tableRowAdd(newData);
-              resolve();
-              // setTimeout(() => {
-              //   setTableData([...tableData, newData]);
-              //   resolve();
-              // }, 1000);
-            }),
+          isEditHidden: (row) => hideShowRowUpdate,
+          isDeleteHidden: (row) => hideShowRowDelete,
+
+          onRowAdd:
+            showRowAdd &&
+            ((newData) =>
+              new Promise((resolve, reject) => {
+                tableRowAdd(newData);
+                resolve();
+                // setTimeout(() => {
+                //   setTableData([...tableData, newData]);
+                //   resolve();
+                // }, 1000);
+              })),
           onRowUpdate: (newRow, oldRow) =>
             new Promise((resolve, reject) => {
               tableRowUpdate(newRow);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Badge,
   Card,
@@ -27,17 +27,89 @@ import TabPanel from "@mui/lab/TabPanel";
 import ServicesList from "./ServicesList";
 import ServiceTypes from "./ServiceTypes";
 import Header from "components/Headers/Header";
+import { getAllServiceTypes } from "services/service-types/service-types";
+import {
+  getAllClientDetails,
+  getClientDetailsById,
+  addClientDetails,
+  updateClientDetails,
+  deleteClientDetails
+} from "services/client-details/client-details";
+import Lottie from "lottie-react";
+import Ocean from "../../assets/mylotties/56811-running-server.json";
+import { height } from "@mui/system";
 
 function ServicesPage() {
   const [value, setValue] = useState("1");
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState();
+  const [lookupData, setLookUpData] = useState();
+  const [clientLookupData, setClientLookUpData] = useState();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const getAllTheServiceTypes = async () => {
+    try {
+      setIsLoading(true);
+      let response = await getAllServiceTypes();
+      console.log("reponse for fetching service types : ", response);
+      let status = {};
+      await response.data.map((data) => {
+        return (status[data.id] = data.service_name);
+      });
+      setLookUpData(status);
+      //   setTableData(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+
+  //fetching allClient data
+  const getAllClients = async () => {
+    try {
+      setIsLoading(true);
+      let response = await getAllClientDetails();
+      console.log("reponse for fetching clients : ", response);
+      // setTableData(response.data);
+      let status = {};
+      await response.data.map((data) => {
+        return (status[data.id] = data.client_name);
+      });
+      setClientLookUpData(status);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+  //calling all function synchronusly to fetch data
+  const fetchAllTableData = async () => {
+    await getAllTheServiceTypes();
+    await getAllClients();
+    return;
+  };
+  useEffect(() => {
+    fetchAllTableData();
+  }, []);
   return (
     <>
-      <Header />
+      <Header
+        BackgroundObject={
+          <Lottie
+            animationData={Ocean}
+            style={{
+              objectFit: "cover",
+              width: "100%",
+              marginTop: "-300px"
+            }}
+            loop={true}
+            autoplay={true}
+          />
+        }
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* mui Table */}
@@ -49,15 +121,18 @@ function ServicesPage() {
                 onChange={handleChange}
                 aria-label="lab API tabs example"
               >
-                <Tab label="Services" value="1" />
-                <Tab label="Types" value="2" />
+                <Tab label="Types" value="1" />
+                <Tab label="Services" value="2" />
               </TabList>
             </Box>
             <TabPanel value="1">
-              <ServicesList />
+              <ServiceTypes />
             </TabPanel>
             <TabPanel value="2">
-              <ServiceTypes />
+              <ServicesList
+                lookupData={lookupData}
+                clientLookupData={clientLookupData}
+              />
             </TabPanel>
           </TabContext>
         </Box>

@@ -19,18 +19,48 @@
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
-const Header = ({ children }) => {
+const Header = ({ BackgroundObject, children }) => {
   return (
     <>
-      <div
-        className="header bg-gradient-info pb-8 pt-5 pt-md-8"
-        style={{ minWidth: "40%" }}
-      >
-        <Container fluid>
-          <div className="header-body">
-            {/* Card stats */}
-            <Row>
-              {/* <Col lg="6" xl="3">
+      {/* <div className="header bg-gradient-info"> */}
+      <div className="header ">
+        <div
+          style={{
+            pointerEvents: "none",
+            background: "purple",
+            height: "280px",
+            width: "100%",
+            overflow: "hidden"
+          }}
+        >
+          <div
+            style={{
+              pointerEvents: "none",
+              background: "green",
+              height: "800px",
+              width: "100%"
+            }}
+            className="header bg-gradient-info"
+          >
+            {BackgroundObject}
+          </div>
+        </div>
+
+        <div
+          style={{
+            pointerEvents: "none",
+
+            maxHeight: "40%",
+            marginTop: "-300px",
+            overflow: "hidden"
+          }}
+        >
+          <div style={{ minheight: "40%" }} className="pb-8 pt-5 pt-md-8">
+            <Container fluid>
+              <div className="header-body">
+                {/* Card stats */}
+                <Row>
+                  {/* <Col lg="6" xl="3">
                 <Card className="card-stats mb-4 mb-xl-0">
                   <CardBody>
                     <Row>
@@ -60,10 +90,12 @@ const Header = ({ children }) => {
                   </CardBody>
                 </Card>
               </Col> */}
-              {children}
-            </Row>
+                  {children}
+                </Row>
+              </div>
+            </Container>
           </div>
-        </Container>
+        </div>
       </div>
     </>
   );

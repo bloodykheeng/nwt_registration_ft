@@ -46,12 +46,16 @@ import PasswordIcon from "@mui/icons-material/Password";
 import CustomDatePicker from "components/DatePicker/CustomDatePicker";
 import CustomModal from "components/CustomModal/CustomModal";
 import ClientsServicesForm from "./ClientsServicesForm";
+import ClientServiceList from "./ClientServiceList";
 
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import { getAllServiceTypes } from "services/service-types/service-types";
+import Lottie from "lottie-react";
+import ClientsLottie from "../../assets/mylotties/56811-running-server.json";
 
 function ClientsPage() {
   const columns = [
@@ -98,7 +102,29 @@ function ClientsPage() {
   const [tableColumns, setTableColumns] = useState(columns);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState();
+  const [clientInfo, setClientInfo] = useState();
+  const [lookupData, setLookUpData] = useState();
+  const [clientLookupData, setClientLookUpData] = useState();
 
+  const getAllTheServiceTypes = async () => {
+    try {
+      setIsLoading(true);
+      let response = await getAllServiceTypes();
+      console.log("reponse for fetching service types : ", response);
+      let status = {};
+      await response.data.map((data) => {
+        return (status[data.id] = data.service_name);
+      });
+      setLookUpData(status);
+      //   setTableData(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+
+  console.log("clientInfo parent", clientInfo);
   //fetching allClient data
   const getAllClients = async () => {
     try {
@@ -106,14 +132,26 @@ function ClientsPage() {
       let response = await getAllClientDetails();
       console.log("reponse for fetching clients : ", response);
       setTableData(response.data);
+      let status = {};
+      await response.data.map((data) => {
+        return (status[data.id] = data.client_name);
+      });
+      setClientLookUpData(status);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       console.log(error);
     }
   };
+
+  //calling all function synchronusly to fetch data
+  const fetchAllTableData = async () => {
+    await getAllTheServiceTypes();
+    await getAllClients();
+    return;
+  };
   useEffect(() => {
-    getAllClients();
+    fetchAllTableData();
   }, []);
 
   const handleAddRow = async (data) => {
@@ -167,7 +205,20 @@ function ClientsPage() {
   };
   return (
     <>
-      <Header />
+      <Header
+        BackgroundObject={
+          <Lottie
+            animationData={ClientsLottie}
+            style={{
+              objectFit: "cover",
+              width: "100%",
+              marginTop: "-300px"
+            }}
+            loop={true}
+            autoplay={true}
+          />
+        }
+      />
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* mui Table */}
@@ -192,33 +243,39 @@ function ClientsPage() {
                 tableRowDelete={handleRowDelete}
                 showAddMoreServices={true}
                 handleAddMoreServices={(e, data) => {
-                  console.log("the data when adding more services");
+                  console.log("the data when adding more services", e);
+                  setClientInfo(data);
                   setOpenCustomModal(true);
                 }}
+                tableTitle="List Of all Clients"
               />
               <CustomModal
                 open={openCustomModal}
                 handleClose={() => setOpenCustomModal(false)}
               >
-                <Box sx={{ width: "100%", typography: "body1" }}>
-                  <TabContext value={value}>
-                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                      <TabList
-                        onChange={handleChange}
-                        aria-label="lab API tabs example"
-                      >
-                        <Tab label="Form" value="1" />
-                        <Tab label="Services" value="2" />
-                        {/* <Tab label="Item Three" value="3" /> */}
-                      </TabList>
-                    </Box>
-                    <TabPanel value="1">
-                      <ClientsServicesForm />
-                    </TabPanel>
-                    <TabPanel value="2">Item Two</TabPanel>
-                    <TabPanel value="3">Item Three</TabPanel>
-                  </TabContext>
-                </Box>
+                <TabContext value={value}>
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <TabList
+                      onChange={handleChange}
+                      aria-label="lab API tabs example"
+                    >
+                      <Tab label="Form" value="1" />
+                      <Tab label="Services" value="2" />
+                      {/* <Tab label="Item Three" value="3" /> */}
+                    </TabList>
+                  </Box>
+                  <TabPanel value="1">
+                    <ClientsServicesForm clientInfo={clientInfo} />
+                  </TabPanel>
+                  <TabPanel value="2">
+                    <ClientServiceList
+                      clientInfo={clientInfo}
+                      lookupData={lookupData}
+                      clientLookupData={clientLookupData}
+                    />
+                  </TabPanel>
+                  {/* <TabPanel value="3">Item Three</TabPanel> */}
+                </TabContext>
               </CustomModal>
             </Card>
           </div>

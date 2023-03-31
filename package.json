@@ -72,6 +72,7 @@
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
     "react-to-pdf": "^0.0.14",
+    "react-to-print": "^2.14.12",
     "reactstrap": "8.9.0",
     "sass": "1.54.5"
   },

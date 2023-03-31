@@ -27,12 +27,16 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ServicesPage from "views/services/ServicesPage";
 import AdminPage from "views/Admin/AdminPage";
 import ClientsPage from "views/Clients/ClientsPage";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import InvoicesPage from "views/Invoices/InvoicesPage";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 var routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    icon: <i className="ni ni-tv-2 text-primary" />,
+    icon: <DashboardIcon style={{ marginRight: "1rem", color: "maroon" }} />,
     component: Index,
     layout: "/admin"
   },
@@ -46,8 +50,15 @@ var routes = [
   {
     path: "/clients",
     name: "Clients",
-    icon: <i className="ni ni-bullet-list-67 text-red" />,
+    icon: <PeopleAltIcon style={{ marginRight: "1rem", color: "tomato" }} />,
     component: ClientsPage,
+    layout: "/admin"
+  },
+  {
+    path: "/invoices",
+    name: "Invoices",
+    icon: <ReceiptIcon style={{ marginRight: "1rem", color: "green" }} />,
+    component: InvoicesPage,
     layout: "/admin"
   },
   {
