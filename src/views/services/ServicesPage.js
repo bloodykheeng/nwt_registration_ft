@@ -121,18 +121,18 @@ function ServicesPage() {
                 onChange={handleChange}
                 aria-label="lab API tabs example"
               >
-                <Tab label="Types" value="1" />
-                <Tab label="Services" value="2" />
+                <Tab label="Services" value="1" />
+                <Tab label="Types" value="2" />
               </TabList>
             </Box>
             <TabPanel value="1">
-              <ServiceTypes />
-            </TabPanel>
-            <TabPanel value="2">
               <ServicesList
                 lookupData={lookupData}
                 clientLookupData={clientLookupData}
               />
+            </TabPanel>
+            <TabPanel value="2">
+              <ServiceTypes />
             </TabPanel>
           </TabContext>
         </Box>

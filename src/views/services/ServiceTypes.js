@@ -32,9 +32,31 @@ import {
 import CustomDatePicker from "components/DatePicker/CustomDatePicker";
 function ServiceTypes() {
   const columns = [
-    { title: "service_name", field: "service_name" },
-    { title: "registrars_name", field: "registrars_name", editable: false },
-    { title: "registrars_email", field: "registrars_email", editable: false },
+    {
+      title: "Service Name",
+      field: "service_name",
+      cellStyle: {
+        minWidth: 220
+      }
+    },
+    {
+      title: "Registrars Name",
+      field: "registrars_name",
+      editable: false,
+      cellStyle: {
+        minWidth: 220
+      },
+      hidden: true
+    },
+    {
+      title: "Registrars Email",
+      field: "registrars_email",
+      editable: false,
+      cellStyle: {
+        minWidth: 220
+      },
+      hidden: true
+    },
     {
       title: "Created At",
       field: "created_at",
@@ -49,7 +71,8 @@ function ServiceTypes() {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      hidden: true
     },
     {
       title: "Updated At",
@@ -64,7 +87,8 @@ function ServiceTypes() {
       editable: false,
       type: "datetime",
       dateSetting: { locale: "en-GB" },
-      filterComponent: (props) => <CustomDatePicker {...props} />
+      filterComponent: (props) => <CustomDatePicker {...props} />,
+      hidden: true
     }
   ];
   const [tableData, setTableData] = useState();

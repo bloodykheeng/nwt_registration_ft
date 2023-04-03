@@ -38,11 +38,14 @@ import {
   deleteServiceStates
 } from "services/service-states/service-states";
 import CustomDatePicker from "components/DatePicker/CustomDatePicker";
-import { getAllInvoices, deleteInvoices } from "services/invoices/invoices";
+import {
+  getInvoicesByClientId,
+  deleteInvoices
+} from "services/invoices/invoices";
 import CustomModal from "components/CustomModal/CustomModal";
 import InvoiceLayout from "components/invoice/InvoiceLayout";
 
-function InvoicesList() {
+function ClientInvoiceList({ clientInfo }) {
   const [openInvoiceModal, setOpenInvoiceNodal] = useState();
   const [selectedRowData, setSelectedRowData] = useState();
   const handleShowInvoice = (e, rowData) => {
@@ -161,10 +164,11 @@ function InvoicesList() {
   // updated_at: "2023-03-30T10:35:12.000000Z";
 
   //fetching all invoices data
-  const getAllTheInvoices = async () => {
+  const getAllTheInvoicesByClientId = async () => {
+    console.log("client info is : ", clientInfo);
     try {
       setIsLoading(true);
-      let response = await getAllInvoices();
+      let response = await getInvoicesByClientId(clientInfo.id);
       console.log("reponse for fetching invoices : ", response);
       setInvoiceData(response.data);
       setIsLoading(false);
@@ -176,7 +180,7 @@ function InvoicesList() {
 
   //calling all function synchronusly to fetch data
   const fetchAllTableData = async () => {
-    await getAllTheInvoices();
+    await getAllTheInvoicesByClientId();
     return;
   };
   useEffect(() => {
@@ -191,7 +195,7 @@ function InvoicesList() {
       let response = await deleteInvoices(data.id);
       console.log("the handleRowDelete reponse is : ", response);
       setIsLoading(false);
-      getAllTheInvoices();
+      getAllTheInvoicesByClientId();
     } catch (err) {
       setIsLoading(false);
       setErrors(err.response.data);
@@ -205,7 +209,7 @@ function InvoicesList() {
         <div className="col">
           <Card className="shadow" style={{ padding: "1rem" }}>
             <CardHeader className="border-0">
-              <h3 className="mb-0">Invoices</h3>
+              <h3 className="mb-0">{`List Of All Invoices Attached To ${clientInfo.client_name}`}</h3>
             </CardHeader>
             {errors && (
               <p style={{ color: "red" }}>
@@ -219,7 +223,7 @@ function InvoicesList() {
               setTableData={setInvoiceData}
               loading={isLoading}
               tableRowDelete={handleRowDelete}
-              tableTitle="List Of All Invoices"
+              tableTitle="Invoices"
               showAddMoreServices={false}
               showRowAdd={false}
               hideShowRowDelete={false}
@@ -239,4 +243,4 @@ function InvoicesList() {
   );
 }
 
-export default InvoicesList;
+export default ClientInvoiceList;

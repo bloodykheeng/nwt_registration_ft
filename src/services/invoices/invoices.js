@@ -5,7 +5,7 @@ export async function getAllInvoices() {
   return response;
 }
 
-export async function getInvoicesById(id) {
+export async function getInvoicesByClientId(id) {
   const response = await AxiosApi.get("/api/invoice/" + id);
   return response;
 }
@@ -22,5 +22,10 @@ export async function updateInvoices(id, data) {
 
 export async function deleteInvoices(id) {
   const response = AxiosApi.delete("/api/invoice/" + id);
+  return response;
+}
+
+export async function sendManualInvoice(id) {
+  const response = AxiosApi.get("/api/sendinvoicefromdb/" + id);
   return response;
 }

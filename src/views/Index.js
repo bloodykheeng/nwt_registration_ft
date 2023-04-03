@@ -51,9 +51,14 @@ import Header from "components/Headers/Header.js";
 import useAuthContext from "context/AuthContext";
 import Lottie from "lottie-react";
 import Ocean from "../assets/mylotties/56961-underwater-ocean-fish-and-turtle (1).json";
+
+import { getAllClientDetails } from "services/client-details/client-details";
+
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
   const [chartExample1Data, setChartExample1Data] = useState("data1");
+  const [isLoading, setIsLoading] = useState();
+  const [ClientData, setClientData] = useState();
 
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
@@ -66,10 +71,16 @@ const Index = (props) => {
   };
 
   const { user, getUser } = useAuthContext();
+  const getAllTheClientDetails = async () => {
+    let response = await getAllClientDetails();
+    setClientData(response.data);
+  };
+
   useEffect(() => {
     if (!user) {
       getUser();
     }
+    getAllTheClientDetails();
   }, []);
   return (
     <>
@@ -87,7 +98,10 @@ const Index = (props) => {
         }
       >
         <Col lg="6" xl="3">
-          <Card className="card-stats mb-4 mb-xl-0">
+          <Card
+            className="card-stats mb-4 mb-xl-0"
+            style={{ minHeight: "120px" }}
+          >
             <CardBody>
               <Row>
                 <div className="col">
@@ -111,7 +125,10 @@ const Index = (props) => {
           </Card>
         </Col>
         <Col lg="6" xl="3">
-          <Card className="card-stats mb-4 mb-xl-0">
+          <Card
+            className="card-stats mb-4 mb-xl-0"
+            style={{ minHeight: "120px" }}
+          >
             <CardBody>
               <Row>
                 <div className="col">
@@ -119,9 +136,11 @@ const Index = (props) => {
                     tag="h5"
                     className="text-uppercase text-muted mb-0"
                   >
-                    New Clients
+                    Clients
                   </CardTitle>
-                  <span className="h2 font-weight-bold mb-0">2,356</span>
+                  <span className="h2 font-weight-bold mb-0">
+                    {ClientData ? ClientData.length : "Loading..."}
+                  </span>
                 </div>
                 <Col className="col-auto">
                   <div className="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -130,16 +149,19 @@ const Index = (props) => {
                 </Col>
               </Row>
               <p className="mt-3 mb-0 text-muted text-sm">
-                <span className="text-danger mr-2">
-                  <i className="fas fa-arrow-down" /> 3.48%
+                <span className="text-success mr-2">
+                  <i className="fas fa-arrow-up" /> 3.48%
                 </span>{" "}
-                <span className="text-nowrap">Since last week</span>
+                <span className="text-nowrap">Since yesterday</span>
               </p>
             </CardBody>
           </Card>
         </Col>
         <Col lg="6" xl="3">
-          <Card className="card-stats mb-4 mb-xl-0">
+          <Card
+            className="card-stats mb-4 mb-xl-0"
+            style={{ minHeight: "120px" }}
+          >
             <CardBody>
               <Row>
                 <div className="col">
@@ -167,7 +189,10 @@ const Index = (props) => {
           </Card>
         </Col>
         <Col lg="6" xl="3">
-          <Card className="card-stats mb-4 mb-xl-0">
+          <Card
+            className="card-stats mb-4 mb-xl-0"
+            style={{ minHeight: "120px" }}
+          >
             <CardBody>
               <Row>
                 <div className="col">
@@ -198,7 +223,7 @@ const Index = (props) => {
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
-          <Col className="mb-5 mb-xl-0" xl="8">
+          <Col className="mb-5 mb-xl-0" xl="12">
             <Card className="bg-gradient-default shadow">
               <CardHeader className="bg-transparent">
                 <Row className="align-items-center">
@@ -251,9 +276,9 @@ const Index = (props) => {
               </CardBody>
             </Card>
           </Col>
-          <Col xl="4">
-            <Card className="shadow">
-              <CardHeader className="bg-transparent">
+          {/* <Col xl="4"> */}
+          {/* <Card className="shadow"> */}
+          {/* <CardHeader className="bg-transparent">
                 <Row className="align-items-center">
                   <div className="col">
                     <h6 className="text-uppercase text-muted ls-1 mb-1">
@@ -262,21 +287,21 @@ const Index = (props) => {
                     <h2 className="mb-0">Total orders</h2>
                   </div>
                 </Row>
-              </CardHeader>
-              <CardBody>
-                {/* Chart */}
-                <div className="chart">
+              </CardHeader> */}
+          {/* <CardBody> */}
+          {/* Chart */}
+          {/* <div className="chart">
                   <Bar
                     data={chartExample2.data}
                     options={chartExample2.options}
                   />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
+                </div> */}
+          {/* </CardBody> */}
+          {/* </Card> */}
+          {/* </Col> */}
         </Row>
 
-        {/* <Row className="mt-5">
+        {/* <Row className="mt-5">added 
           <Col className="mb-5 mb-xl-0" xl="12">
             <Card className="shadow">
               <CardBody>

@@ -134,7 +134,7 @@ const Sidebar = (props) => {
               className="navbar-brand-img"
               src={logo.imgSrc}
             />
-            <b>N W T</b>
+            {/* <b>N W T</b> */}
           </NavbarBrand>
         ) : null}
         {/* User */}
@@ -252,7 +252,7 @@ const Sidebar = (props) => {
                   <LogoutIcon
                     style={{ marginRight: "1rem", color: "purple" }}
                   />
-                  logout
+                  Logout
                 </NavLink>
               </div>
             </NavItem>

@@ -15,6 +15,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+
+import { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
 import {
@@ -33,19 +35,26 @@ import {
   Container,
   Media
 } from "reactstrap";
-
+import useAuthContext from "context/AuthContext";
 const AdminNavbar = (props) => {
+  const { user, getUser } = useAuthContext();
+
+  useEffect(() => {
+    if (!user) {
+      getUser();
+    }
+  }, []);
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
         <Container fluid>
           <Link
             className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
-            to="/"
+            to="#"
           >
             {props.brandText}
           </Link>
-          <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+          {/* <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
             <FormGroup className="mb-0">
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
@@ -56,7 +65,7 @@ const AdminNavbar = (props) => {
                 <Input placeholder="Search" type="text" />
               </InputGroup>
             </FormGroup>
-          </Form>
+          </Form> */}
           <Nav className="align-items-center d-none d-md-flex" navbar>
             <UncontrolledDropdown nav>
               <DropdownToggle className="pr-0" nav>
@@ -65,15 +74,18 @@ const AdminNavbar = (props) => {
                     <img
                       alt="..."
                       // src={require("../../assets/img/theme/team-4-800x800.jpg")}
-                      src={require("../../assets/img/brand/New Wave logo.jpg")}
+                      src={require("../../assets/img/brand/icons8-user-100.png")}
+                      // src={require("../../assets/img/brand/New Wave logo.jpg")}
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
-                    <span className="mb-0 text-sm font-weight-bold">user</span>
+                    <span className="mb-0 text-sm font-weight-bold">
+                      {user?.name}
+                    </span>
                   </Media>
                 </Media>
               </DropdownToggle>
-              <DropdownMenu className="dropdown-menu-arrow" right>
+              {/* <DropdownMenu className="dropdown-menu-arrow" right>
                 <DropdownItem className="noti-title" header tag="div">
                   <h6 className="text-overflow m-0">Welcome!</h6>
                 </DropdownItem>
@@ -98,7 +110,7 @@ const AdminNavbar = (props) => {
                   <i className="ni ni-user-run" />
                   <span>Logout</span>
                 </DropdownItem>
-              </DropdownMenu>
+              </DropdownMenu> */}
             </UncontrolledDropdown>
           </Nav>
         </Container>

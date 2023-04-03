@@ -57,15 +57,64 @@ import { getAllServiceTypes } from "services/service-types/service-types";
 import Lottie from "lottie-react";
 import ClientsLottie from "../../assets/mylotties/56811-running-server.json";
 
+import ClientInvoiceList from "./ClientInvoiceList";
+
 function ClientsPage() {
   const columns = [
-    { title: "client_name", field: "client_name" },
-    { title: "client_address", field: "client_address" },
-    { title: "client_pobox", field: "client_pobox" },
-    { title: "client_phonenumber", field: "client_phonenumber" },
-    { title: "client_email", field: "client_email" },
-    { title: "registrars_name", field: "registrars_name", editable: false },
-    { title: "registrars_email", field: "registrars_email", editable: false },
+    {
+      title: "Client Name",
+      field: "client_name",
+      cellStyle: {
+        minWidth: 210
+      }
+    },
+    {
+      title: "Client Address",
+      field: "client_address",
+      cellStyle: {
+        minWidth: 210
+      }
+    },
+    {
+      title: "Client Po Box",
+      field: "client_pobox",
+      cellStyle: {
+        minWidth: 210
+      }
+    },
+    {
+      title: "Client Phonenumber",
+      field: "client_phonenumber",
+      cellStyle: {
+        minWidth: 210
+      },
+      hidden: true
+    },
+    {
+      title: "Client Email",
+      field: "client_email",
+      cellStyle: {
+        minWidth: 210
+      }
+    },
+    {
+      title: "Registrars Name",
+      field: "registrars_name",
+      editable: false,
+      cellStyle: {
+        minWidth: 210
+      },
+      hidden: true
+    },
+    {
+      title: "Registrars Email",
+      field: "registrars_email",
+      editable: false,
+      cellStyle: {
+        minWidth: 210
+      },
+      hidden: true
+    },
     {
       title: "Created At",
       field: "created_at",
@@ -80,7 +129,8 @@ function ClientsPage() {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      hidden: true
     },
     {
       title: "Updated At",
@@ -95,7 +145,8 @@ function ClientsPage() {
       editable: false,
       type: "datetime",
       dateSetting: { locale: "en-GB" },
-      filterComponent: (props) => <CustomDatePicker {...props} />
+      filterComponent: (props) => <CustomDatePicker {...props} />,
+      hidden: true
     }
   ];
   const [tableData, setTableData] = useState();
@@ -261,7 +312,7 @@ function ClientsPage() {
                     >
                       <Tab label="Form" value="1" />
                       <Tab label="Services" value="2" />
-                      {/* <Tab label="Item Three" value="3" /> */}
+                      <Tab label="Invoices" value="3" />
                     </TabList>
                   </Box>
                   <TabPanel value="1">
@@ -274,7 +325,9 @@ function ClientsPage() {
                       clientLookupData={clientLookupData}
                     />
                   </TabPanel>
-                  {/* <TabPanel value="3">Item Three</TabPanel> */}
+                  <TabPanel value="3">
+                    <ClientInvoiceList clientInfo={clientInfo} />
+                  </TabPanel>
                 </TabContext>
               </CustomModal>
             </Card>

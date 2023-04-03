@@ -59,6 +59,10 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
     let minutesleft = enddate.diff(startdate, "minutes");
     let secondsleft = enddate.diff(startdate, "seconds");
 
+    var timeleft = moment(enddate).from(startdate);
+
+    console.log("timeleft date remaining : ", timeleft);
+
     // console.log(
     //   `Difference is ${enddate.diff(startdate, "days")} milliseconds`
     // );
@@ -68,27 +72,32 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
     // console.log("the days left are : ", daysleft);
     return (
       <small>
-        {yearsleft > 0 && yearsleft + " yr, "}{" "}
+        {/* {yearsleft > 0 && yearsleft + " yr, "}{" "}
         {monthsleft > 0 && monthsleft + " mths, "}
         {weeksleft > 0 && weeksleft + " wks, "}
         {daysleft > 0 && daysleft + " days, "}
         {hoursleft > 0 && hoursleft + " hrs, "}
-        {minutesleft > 0 && minutesleft + " min, "}
-        {secondsleft > 0 && secondsleft + " sec, "}
-        {secondsleft < 1 && <strong style={{ color: "red" }}>expired</strong>}
+        {minutesleft > 0 && minutesleft + " min, "} */}
+        {secondsleft > 0 && timeleft}
+        {secondsleft < 1 && (
+          <strong style={{ color: "red" }}>{timeleft}</strong>
+        )}
       </small>
     );
   };
 
   const columns = [
     {
-      title: "service_types_id",
+      title: "Service Types Id",
       field: "service_types_id",
       lookup: { ...lookupData },
-      editable: false
+      editable: false,
+      cellStyle: {
+        minWidth: 210
+      }
     },
     {
-      title: "Time Remaining",
+      title: "Expires",
       field: "start_date",
       type: "text",
       cellStyle: {
@@ -100,7 +109,7 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
       }
     },
     {
-      title: "start_date",
+      title: "Start Date",
       field: "start_date",
       type: "datetime",
       cellStyle: {
@@ -109,7 +118,7 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
       }
     },
     {
-      title: "end_date",
+      title: "End Date",
       field: "end_date",
       type: "datetime",
       cellStyle: {
@@ -117,12 +126,36 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
         maxWidth: 220
       }
     },
-    { title: "tax", field: "tax" },
-    { title: "quantity ", field: "quantity" },
-    { title: "price", field: "price" },
-    { title: "currency", field: "currency" },
     {
-      title: "description",
+      title: "Tax",
+      field: "tax",
+      cellStyle: {
+        minWidth: 210
+      }
+    },
+    {
+      title: "quantity ",
+      field: "quantity",
+      cellStyle: {
+        minWidth: 210
+      }
+    },
+    {
+      title: "price",
+      field: "price",
+      cellStyle: {
+        minWidth: 210
+      }
+    },
+    {
+      title: "currency",
+      field: "currency",
+      cellStyle: {
+        minWidth: 210
+      }
+    },
+    {
+      title: "Description",
       field: "description",
       cellStyle: {
         minWidth: 300,
@@ -130,15 +163,15 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
       }
     },
     {
-      title: "client_id",
+      title: "Client Id",
       field: "client_id",
       lookup: clientLookupData,
       editable: false
     },
-    { title: "registrars_name", field: "registrars_name", editable: false },
-    { title: "registrars_email", field: "registrars_email", editable: false },
+    { title: "Registrars Name", field: "registrars_name", editable: false },
+    { title: "Registrars Email", field: "registrars_email", editable: false },
     {
-      title: "Created_At",
+      title: "Created At",
       field: "created_at",
       type: "datetime",
       // render: (rowData) => {
@@ -154,7 +187,7 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
       editable: false
     },
     {
-      title: "Updated_At",
+      title: "Updated At",
       field: "updated_at",
       // render: (rowData) => {
       //   return moment(rowData.updated_at).format("lll");
@@ -301,7 +334,7 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
       let response = await addInvoices(invoiceData);
       console.log("the reponse sending invoice: ", response);
       setIsLoading(false);
-      alert("invoice sent succesfully");
+      alert("invoice created succesfully");
     } catch (err) {
       setIsLoading(false);
       setErrors(err.response.data);
@@ -315,7 +348,7 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
         <div className="col">
           <Card className="shadow" style={{ padding: "1rem" }}>
             <CardHeader className="border-0">
-              <h3 className="mb-0">Service Status</h3>
+              <h3 className="mb-0">{`List Of all Services attached to ${clientInfo.client_name}`}</h3>
             </CardHeader>
             {errors && (
               <p style={{ color: "red" }}>
@@ -332,12 +365,12 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
                 tableRowAdd={handleAddRow}
                 tableRowUpdate={handleRowUpdate}
                 tableRowDelete={handleRowDelete}
-                tableTitle={`List Of all Services attached to ${clientInfo.client_name}`}
+                tableTitle="service status"
                 showAddMoreServices={true}
                 addindmoreservicesIcon=<ReceiptIcon
                   style={{ color: "green" }}
                 />
-                addindmoreservicesTitle="send invoice"
+                addindmoreservicesTitle="create invoice"
                 handleAddMoreServices={(e, data) => {
                   //handleSendingInvoice(data);
                   console.log("the data when adding more services", data);

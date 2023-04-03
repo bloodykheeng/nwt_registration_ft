@@ -34,7 +34,7 @@ const AdminNavbar = () => {
     <>
       <Navbar className="navbar-top navbar-horizontal navbar-dark" expand="md">
         <Container className="px-4">
-          <NavbarBrand to="/" tag={Link}>
+          <NavbarBrand to="#" tag={Link}>
             <div
               style={{
                 display: "flex",
@@ -45,15 +45,15 @@ const AdminNavbar = () => {
               }}
             >
               <img
-                style={{ height: "50px" }}
+                style={{ height: "100px" }}
                 alt="..."
                 // src={require("../../assets/img/brand/argon-react-white.png")}
                 src={require("../../assets/img/brand/New Wave logo.jpg")}
               />
-              <h3 style={{ color: "white" }}>
+              {/* <h3 style={{ color: "white" }}>
                 {" "}
                 <strong>New Wave Technologies</strong>
-              </h3>
+              </h3> */}
             </div>
           </NavbarBrand>
           <button className="navbar-toggler" id="navbar-collapse-main">
@@ -119,7 +119,8 @@ const AdminNavbar = () => {
                 </NavLink>
               </NavItem> */}
               <NavItem>
-                <NavLink className="nav-link-icon" to="/auth/login" tag={Link}>
+                {/* <NavLink className="nav-link-icon" to="/auth/login" tag={Link}> */}
+                <NavLink className="nav-link-icon" to="#" tag={Link}>
                   <i className="ni ni-key-25" />
                   <span className="nav-link-inner--text">Login</span>
                 </NavLink>

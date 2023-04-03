@@ -120,6 +120,9 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
     let hoursleft = enddate.diff(startdate, "hours");
     let minutesleft = enddate.diff(startdate, "minutes");
     let secondsleft = enddate.diff(startdate, "seconds");
+    var timeleft = moment(enddate).from(startdate);
+
+    console.log("timeleft date remaining : ", timeleft);
 
     // console.log(
     //   `Difference is ${enddate.diff(startdate, "days")} milliseconds`
@@ -130,27 +133,41 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
     // console.log("the days left are : ", daysleft);
     return (
       <small>
-        {yearsleft > 0 && yearsleft + " yr, "}{" "}
+        {/* {yearsleft > 0 && yearsleft + " yr, "}{" "}
         {monthsleft > 0 && monthsleft + " mths, "}
         {weeksleft > 0 && weeksleft + " wks, "}
         {daysleft > 0 && daysleft + " days, "}
         {hoursleft > 0 && hoursleft + " hrs, "}
-        {minutesleft > 0 && minutesleft + " min, "}
-        {secondsleft > 0 && secondsleft + " sec, "}
-        {secondsleft < 1 && <strong style={{ color: "red" }}>expired</strong>}
+        {minutesleft > 0 && minutesleft + " min, "} */}
+        {secondsleft > 0 && timeleft}
+        {secondsleft < 1 && (
+          <strong style={{ color: "red" }}>{timeleft}</strong>
+        )}
       </small>
     );
   };
 
   const columns = [
     {
-      title: "service_types_id",
-      field: "service_types_id",
-      lookup: { ...lookupData },
-      editable: false
+      title: "Client Name",
+      field: "client_id",
+      lookup: { ...clientLookupData },
+      editable: false,
+      cellStyle: {
+        minWidth: 220
+      }
     },
     {
-      title: "Time Remaining",
+      title: "Service Types Id",
+      field: "service_types_id",
+      lookup: { ...lookupData },
+      editable: false,
+      cellStyle: {
+        minWidth: 220
+      }
+    },
+    {
+      title: "Expires",
       field: "start_date",
       type: "text",
       cellStyle: {
@@ -159,10 +176,12 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
       },
       render: (rowdata) => {
         return daysRemaining(rowdata);
-      }
+      },
+      editable: false,
+      filtering: false
     },
     {
-      title: "start_date",
+      title: "Start Date",
       field: "start_date",
       type: "datetime",
       cellStyle: {
@@ -171,7 +190,7 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
       }
     },
     {
-      title: "end_date",
+      title: "End Date",
       field: "end_date",
       type: "datetime",
       cellStyle: {
@@ -179,28 +198,51 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
         maxWidth: 210
       }
     },
-    { title: "tax", field: "tax" },
-    { title: "quantity ", field: "quantity" },
-    { title: "price", field: "price" },
+    { title: "Tax", field: "tax" },
+    {
+      title: "quantity ",
+      field: "quantity",
+      cellStyle: {
+        minWidth: 220
+      }
+    },
+    {
+      title: "price",
+      field: "price",
+      cellStyle: {
+        minWidth: 220
+      }
+    },
     { title: "currency", field: "currency" },
     {
-      title: "description",
+      title: "Description",
       field: "description",
       cellStyle: {
         minWidth: 300,
         maxWidth: 300
       }
     },
+
     {
-      title: "client_id",
-      field: "client_id",
-      lookup: { ...clientLookupData },
-      editable: false
+      title: "Registrars Name",
+      field: "registrars_name",
+      editable: false,
+      cellStyle: {
+        minWidth: 220
+      },
+      hidden: true
     },
-    { title: "registrars_name", field: "registrars_name", editable: false },
-    { title: "registrars_email", field: "registrars_email", editable: false },
     {
-      title: "Created_At",
+      title: "Registrars Email",
+      field: "registrars_email",
+      editable: false,
+      cellStyle: {
+        minWidth: 220
+      },
+      hidden: true
+    },
+    {
+      title: "Created At",
       field: "created_at",
       type: "datetime",
       // render: (rowData) => {
@@ -213,10 +255,11 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      hidden: true
     },
     {
-      title: "Updated_At",
+      title: "Updated At",
       field: "updated_at",
       // render: (rowData) => {
       //   return moment(rowData.updated_at).format("lll");
@@ -228,11 +271,12 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
       editable: false,
       type: "datetime",
       dateSetting: { locale: "en-GB" },
-      filterComponent: (props) => <CustomDatePicker {...props} />
+      filterComponent: (props) => <CustomDatePicker {...props} />,
+      hidden: true
     }
   ];
   const [tableData, setTableData] = useState();
-  const [tableColumns, setTableColumns] = useState(columns);
+  const [tableColumns, setTableColumns] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState();
 
@@ -262,6 +306,7 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
   };
   useEffect(() => {
     fetchAllTableData();
+    setTableColumns(columns);
   }, []);
 
   const handleAddRow = async (data) => {
@@ -322,17 +367,18 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
               </p>
             )}
             {isLoading && <h1>isLoading...</h1>}
-
-            <MuiTable
-              tableColumns={tableColumns}
-              tableData={tableData}
-              setTableData={setTableData}
-              loading={isLoading}
-              tableRowAdd={handleAddRow}
-              tableRowUpdate={handleRowUpdate}
-              tableRowDelete={handleRowDelete}
-              tableTitle="List Of all Registered Services"
-            />
+            {!isLoading && (
+              <MuiTable
+                tableColumns={columns}
+                tableData={tableData}
+                setTableData={setTableData}
+                loading={isLoading}
+                tableRowAdd={handleAddRow}
+                tableRowUpdate={handleRowUpdate}
+                tableRowDelete={handleRowDelete}
+                tableTitle="List Of All Running Services"
+              />
+            )}
           </Card>
         </div>
       </Row>

@@ -33,7 +33,7 @@ const Login = () => {
                   className="font-weight-bold ml-1"
                   // href="https://www.creative-tim.com?ref=adr-auth-footer"
                   href="#"
-                  target="_blank"
+                  // target="_blank"
                 >
                   NWT
                 </a>

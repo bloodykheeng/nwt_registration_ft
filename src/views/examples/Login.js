@@ -90,7 +90,7 @@ const Login = () => {
           </CardHeader> */}
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <small>sign in with Your credentials</small>
+              <small>Sign In With Your credentials</small>
             </div>
             {isLoading && (
               <div>
@@ -106,7 +106,7 @@ const Login = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="UserName / Email"
+                    placeholder="Email"
                     type="text"
                     autoComplete="new-email"
                     onChange={(e) => setEmail(e.target.value)}
@@ -138,6 +138,16 @@ const Login = () => {
                     autoComplete="new-password"
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <span
+                        onClick={() => setType(!type)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <i className="ni ni-lock-circle-open" />
+                      </span>
+                    </InputGroupText>
+                  </InputGroupAddon>
                 </InputGroup>
                 {errors && (
                   <small className="text-danger">
@@ -174,7 +184,7 @@ const Login = () => {
             </Form>
           </CardBody>
         </Card>
-        <Row className="mt-3">
+        {/* <Row className="mt-3">
           <Col xs="6">
             <a
               className="text-light"
@@ -193,7 +203,7 @@ const Login = () => {
               <small>Create new account</small>
             </a>
           </Col>
-        </Row>
+        </Row> */}
       </Col>
     </>
   );
