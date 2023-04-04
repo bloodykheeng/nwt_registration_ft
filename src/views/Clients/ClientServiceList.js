@@ -42,6 +42,9 @@ import CustomDatePicker from "components/DatePicker/CustomDatePicker";
 import { addInvoices, getAllInvoices } from "services/invoices/invoices";
 import { getAllInvoiceAddress } from "services/invoice-address/invoice-address";
 
+import CustomIsLoading from "components/loading/CustomIsLoading";
+import { ToastContainer, toast } from "react-toastify";
+
 function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
   console.log("client list : ", clientInfo);
 
@@ -87,6 +90,16 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
   };
 
   const columns = [
+    {
+      title: "Client Name",
+      field: "client_id",
+      lookup: { ...clientLookupData },
+      editable: false,
+      cellStyle: {
+        minWidth: 220
+      },
+      editable: false
+    },
     {
       title: "Service Types Id",
       field: "service_types_id",
@@ -162,12 +175,6 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
         maxWidth: 300
       }
     },
-    {
-      title: "Client Id",
-      field: "client_id",
-      lookup: clientLookupData,
-      editable: false
-    },
     { title: "Registrars Name", field: "registrars_name", editable: false },
     { title: "Registrars Email", field: "registrars_email", editable: false },
     {
@@ -184,7 +191,8 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      defaultSort: "desc"
     },
     {
       title: "Updated At",
@@ -321,24 +329,38 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
 
   //handle sending invoice
   const handleSendingInvoice = async (data) => {
-    let invoiceData = {
-      invoice_id: getInvoiceId(),
-      invoice_tin: 1000292703,
-      invoice_address_id: invoiceAddressData[0]?.id,
-      service_state_id: data.id
-    };
-    console.log("invoiceData is : ", invoiceData);
-    try {
-      setIsLoading(true);
+    // var enddate = moment(data.end_date);
+    // var startdate = moment(data.start_date);
+    var enddate = moment("2023-03-31 01:51:00");
+    var startdate = moment("2023-03-29 01:51:00");
+    let currentdate = moment();
 
-      let response = await addInvoices(invoiceData);
-      console.log("the reponse sending invoice: ", response);
-      setIsLoading(false);
-      alert("invoice created succesfully");
-    } catch (err) {
-      setIsLoading(false);
-      setErrors(err.response.data);
-      console.log("error is : ", err);
+    let secondsleft = enddate.diff(currentdate, "seconds");
+    // console.log("seconds left are : ", secondsleft);
+    if (secondsleft > 1) {
+      let invoiceData = {
+        invoice_id: getInvoiceId(),
+        invoice_tin: 1000292703,
+        invoice_address_id: invoiceAddressData[0]?.id,
+        service_state_id: data.id
+      };
+      // console.log("invoiceData is : ", invoiceData);
+      try {
+        setIsLoading(true);
+
+        let response = await addInvoices(invoiceData);
+        console.log("the reponse sending invoice: ", response);
+        setIsLoading(false);
+        toast.success("invoice created succesfully");
+        // alert("invoice created succesfully");
+      } catch (err) {
+        setIsLoading(false);
+        toast.error("there was an error creating invoce");
+        setErrors(err.response.data);
+        console.log("error is : ", err);
+      }
+    } else {
+      toast.warning("service already expired");
     }
   };
 
@@ -355,7 +377,7 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
                 There are semantic errors in your data
               </p>
             )}
-            {isLoading && <h1>isLoading...</h1>}
+            {isLoading && <CustomIsLoading />}
             {!isLoading && (
               <MuiTable
                 tableColumns={tableColumns}
@@ -373,7 +395,7 @@ function ClientServiceList({ clientInfo, lookupData, clientLookupData }) {
                 addindmoreservicesTitle="create invoice"
                 handleAddMoreServices={(e, data) => {
                   //handleSendingInvoice(data);
-                  console.log("the data when adding more services", data);
+                  // console.log("the data when creating invoice", data);
                   handleSendingInvoice(data);
                   //   setClientInfo(data);
                   //   setOpenCustomModal(true);

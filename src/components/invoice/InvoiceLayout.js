@@ -5,6 +5,8 @@ import "./invoicestyles.css";
 import NewWaveLogo from "../../assets/myfiles/New Wave logo.jpg";
 import { Button } from "reactstrap";
 import moment from "moment";
+import { toast } from "react-toastify";
+import CustomIsLoading from "components/loading/CustomIsLoading";
 
 // client_address: "kampalaroad";
 // client_email: "mtn@gmail.com";
@@ -76,13 +78,16 @@ export default function InvoiceLayout({
         response
       );
       if (response.status == 200) {
-        alert("invoice sent");
+        toast.success("invoice sent");
+        // alert("invoice sent");
       } else {
-        alert("Ummm! something wrong");
+        toast.error("Ummm! something wrong invoice not sent");
+        // alert("Ummm! something wrong");
       }
     } catch (err) {
       setIsLoading(false);
-      alert("there was an error sending invoice");
+      toast.error("there was an error sending invoice");
+      // alert("there was an error sending invoice");
     }
   };
 
@@ -195,8 +200,14 @@ export default function InvoiceLayout({
           </table>
         </div>
       </div>
-      <div>
-        <center>{isLoading && "Sending..."}</center>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        {isLoading && <CustomIsLoading msg="sending" />}
       </div>
       <div className="printbutton">
         <Button outline color="primary" onClick={handlePrint}>

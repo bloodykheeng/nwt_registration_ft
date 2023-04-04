@@ -30,6 +30,8 @@ import {
   deleteServiceTypes
 } from "services/service-types/service-types";
 import CustomDatePicker from "components/DatePicker/CustomDatePicker";
+import CustomIsLoading from "components/loading/CustomIsLoading";
+
 function ServiceTypes() {
   const columns = [
     {
@@ -72,7 +74,8 @@ function ServiceTypes() {
         maxWidth: 210
       },
       editable: false,
-      hidden: true
+      hidden: true,
+      defaultSort: "desc"
     },
     {
       title: "Updated At",
@@ -166,6 +169,7 @@ function ServiceTypes() {
             <CardHeader className="border-0">
               <h3 className="mb-0">Service Types</h3>
             </CardHeader>
+            {isLoading && <CustomIsLoading />}
             {errors && (
               <p style={{ color: "red" }}>
                 There are semantic errors in your data

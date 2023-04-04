@@ -17,6 +17,11 @@ import { useState, useEffect } from "react";
 import AxiosApi from "services/api/AxiosApi";
 import { useNavigate } from "react-router-dom";
 import useAuthContext from "../../context/AuthContext";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+
+import Lottie from "lottie-react";
+import OpenEye from "../../assets/mylotties/83983-eye-icon.json";
+import CustomIsLoading from "components/loading/CustomIsLoading";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -92,11 +97,7 @@ const Login = () => {
             <div className="text-center text-muted mb-4">
               <small>Sign In With Your credentials</small>
             </div>
-            {isLoading && (
-              <div>
-                <h3>loading...</h3>
-              </div>
-            )}
+            {isLoading && <CustomIsLoading />}
             <Form role="form">
               <FormGroup className="mb-3">
                 <InputGroup className="input-group-alternative">
@@ -144,7 +145,16 @@ const Login = () => {
                         onClick={() => setType(!type)}
                         style={{ cursor: "pointer" }}
                       >
-                        <i className="ni ni-lock-circle-open" />
+                        {!type ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <Lottie
+                            animationData={OpenEye}
+                            style={{ width: "25px" }}
+                            loop={true}
+                            autoplay={true}
+                          />
+                        )}
                       </span>
                     </InputGroupText>
                   </InputGroupAddon>

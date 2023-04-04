@@ -1,64 +1,3 @@
-// import React, { useState } from "react";
-// import MuiTable from "components/MuiTable";
-
-// function ServicesList() {
-//   const columns = [
-//     { title: "First Name", field: "name" },
-//     { title: "Last Name", field: "surname" },
-//     { title: "Birth Year", field: "birthYear", type: "numeric" },
-//     {
-//       title: "Birth City",
-//       field: "birthCity",
-//       lookup: { 34: "kampala", 63: "masaka" }
-//     }
-//   ];
-
-//   const data = [
-//     {
-//       id: 1,
-//       name: "Buwembo",
-//       surname: "David",
-//       birthYear: 1987,
-//       birthCity: 63
-//     },
-//     {
-//       id: 2,
-//       name: "Kalema",
-//       surname: "Mark",
-//       birthYear: 1987,
-//       birthCity: 34
-//     },
-//     {
-//       id: 3,
-//       name: "Tsddy",
-//       surname: "Teddy3",
-//       birthYear: 1987,
-//       birthCity: 63
-//     },
-//     {
-//       id: 4,
-//       name: "Irene",
-//       surname: "Teddy3",
-//       birthYear: 1987,
-//       birthCity: 63
-//     }
-//   ];
-//   const [tableData, setTableData] = useState(data);
-//   const [tableColumns, setTableColumns] = useState(columns);
-//   return (
-//     <>
-//       <MuiTable
-//         tableColumns={tableColumns}
-//         tableData={tableData}
-//         setTableData={(data) => {
-//           console.log("updated data : ", data);
-//           setTableData(data);
-//         }}
-//       />
-//     </>
-//   );
-// }
-
 // export default ServicesList;
 
 import React, { useState, useEffect } from "react";
@@ -101,7 +40,8 @@ import {
   deleteServiceStates
 } from "services/service-states/service-states";
 import CustomDatePicker from "components/DatePicker/CustomDatePicker";
-
+import CustomIsLoading from "components/loading/CustomIsLoading";
+import { toast } from "react-toastify";
 function ServicesList({ clientInfo, lookupData, clientLookupData }) {
   console.log("client list : ", clientInfo);
   console.log("lookupData : ", lookupData);
@@ -122,7 +62,7 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
     let secondsleft = enddate.diff(startdate, "seconds");
     var timeleft = moment(enddate).from(startdate);
 
-    console.log("timeleft date remaining : ", timeleft);
+    // console.log("timeleft date remaining : ", timeleft);
 
     // console.log(
     //   `Difference is ${enddate.diff(startdate, "days")} milliseconds`
@@ -152,16 +92,16 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
       title: "Client Name",
       field: "client_id",
       lookup: { ...clientLookupData },
-      editable: false,
+      // editable: true,
       cellStyle: {
         minWidth: 220
       }
     },
     {
-      title: "Service Types Id",
+      title: "Service Types",
       field: "service_types_id",
       lookup: { ...lookupData },
-      editable: false,
+      // editable: true,
       cellStyle: {
         minWidth: 220
       }
@@ -188,6 +128,7 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
         minWidth: 210,
         maxWidth: 210
       }
+      // filterComponent: (props) => <CustomDatePicker {...props} />
     },
     {
       title: "End Date",
@@ -197,6 +138,7 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
         minWidth: 210,
         maxWidth: 210
       }
+      // filterComponent: (props) => <CustomDatePicker {...props} />
     },
     { title: "Tax", field: "tax" },
     {
@@ -250,13 +192,14 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
       // },
       // type: "date",
       dateSetting: { locale: "en-GB" },
-      filterComponent: (props) => <CustomDatePicker {...props} />,
+      // filterComponent: (props) => <CustomDatePicker {...props} />,
       cellStyle: {
         minWidth: 210,
         maxWidth: 210
       },
       editable: false,
-      hidden: true
+      hidden: true,
+      defaultSort: "desc"
     },
     {
       title: "Updated At",
@@ -271,7 +214,7 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
       editable: false,
       type: "datetime",
       dateSetting: { locale: "en-GB" },
-      filterComponent: (props) => <CustomDatePicker {...props} />,
+      // filterComponent: (props) => <CustomDatePicker {...props} />,
       hidden: true
     }
   ];
@@ -310,29 +253,57 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
   }, []);
 
   const handleAddRow = async (data) => {
+    let serviceData = {
+      service_type_id: data.service_types_id,
+      start_date: moment(data.start_date).format("YYYY-MM-DD HH:mm:ss"),
+      end_date: moment(data.end_date).format("YYYY-MM-DD HH:mm:ss"),
+      tax: data.tax,
+      quantity: data.quantity,
+      price: data.price,
+      currency: data.currency,
+      description: data.description,
+      client_id: data.client_id
+    };
+    //console.log("handle row add data is : ", data);
+    console.log("service_state_data is : ", serviceData);
     try {
       setIsLoading(true);
-      let response = await addServiceStates(data);
+      let response = await addServiceStates(serviceData);
       console.log("the reponse is : ", response);
       setIsLoading(false);
       getAllServiceStatez();
+      toast.success("service state created Succesfully");
     } catch (err) {
       setIsLoading(false);
+      toast.error("error creating service state");
       setErrors(err.response.data);
       console.log("error is : ", err);
     }
   };
 
   const handleRowUpdate = async (data) => {
+    let serviceData = {
+      service_type_id: data.service_types_id,
+      start_date: moment(data.start_date).format("YYYY-MM-DD HH:mm:ss"),
+      end_date: moment(data.end_date).format("YYYY-MM-DD HH:mm:ss"),
+      tax: data.tax,
+      quantity: data.quantity,
+      price: data.price,
+      currency: data.currency,
+      description: data.description,
+      client_id: data.client_id
+    };
     try {
       setIsLoading(true);
       console.log("the handleRowUpdate data is : ", data);
-      let response = await updateServiceStates(data.id, data);
+      let response = await updateServiceStates(data.id, serviceData);
       console.log("the handleRowUpdate reponse is : ", response);
       setIsLoading(false);
+      toast.success("service state updated Succesfully");
       getAllServiceStatez();
     } catch (err) {
       setIsLoading(false);
+      toast.error("There was an error updating service state");
       setErrors(err.response.data);
       console.log("error handleRowUpdate is : ", err);
     }
@@ -344,11 +315,14 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
       setIsLoading(true);
       let response = await deleteServiceStates(data.id);
       console.log("the handleRowDelete reponse is : ", response);
+
       setIsLoading(false);
+      toast.success("service state deleted Succesfully");
       getAllServiceStatez();
     } catch (err) {
       setIsLoading(false);
       setErrors(err.response.data);
+      toast.success("there was an error deleting service state");
       console.log("error handleRowDelete is : ", err);
     }
   };
@@ -366,19 +340,18 @@ function ServicesList({ clientInfo, lookupData, clientLookupData }) {
                 There are semantic errors in your data
               </p>
             )}
-            {isLoading && <h1>isLoading...</h1>}
-            {!isLoading && (
-              <MuiTable
-                tableColumns={columns}
-                tableData={tableData}
-                setTableData={setTableData}
-                loading={isLoading}
-                tableRowAdd={handleAddRow}
-                tableRowUpdate={handleRowUpdate}
-                tableRowDelete={handleRowDelete}
-                tableTitle="List Of All Running Services"
-              />
-            )}
+            {isLoading && <CustomIsLoading />}
+
+            <MuiTable
+              tableColumns={columns}
+              tableData={tableData}
+              setTableData={setTableData}
+              loading={isLoading}
+              tableRowAdd={handleAddRow}
+              tableRowUpdate={handleRowUpdate}
+              tableRowDelete={handleRowDelete}
+              tableTitle="List Of All Running Services"
+            />
           </Card>
         </div>
       </Row>

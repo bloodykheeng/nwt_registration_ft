@@ -41,6 +41,7 @@ import CustomDatePicker from "components/DatePicker/CustomDatePicker";
 import { getAllInvoices, deleteInvoices } from "services/invoices/invoices";
 import CustomModal from "components/CustomModal/CustomModal";
 import InvoiceLayout from "components/invoice/InvoiceLayout";
+import CustomIsLoading from "components/loading/CustomIsLoading";
 
 function InvoicesList() {
   const [openInvoiceModal, setOpenInvoiceNodal] = useState();
@@ -117,7 +118,8 @@ function InvoicesList() {
       type: "datetime",
       dateSetting: { locale: "en-GB" },
       filterComponent: (props) => <CustomDatePicker {...props} />,
-      hidden: true
+      hidden: true,
+      defaultSort: "desc"
     }
   ];
 
@@ -212,7 +214,7 @@ function InvoicesList() {
                 There are semantic errors in your data
               </p>
             )}
-            {isLoading && <h1>isLoading...</h1>}
+            {isLoading && <CustomIsLoading />}
             <MuiTable
               tableColumns={tableColumns}
               tableData={invoiceData}

@@ -22,6 +22,7 @@ import Select from "@mui/material/Select";
 import { Form, FormGroup, Label, Input, FormText } from "reactstrap";
 import { getAllServiceTypes } from "services/service-types/service-types";
 import { addServiceStates } from "services/service-states/service-states";
+import CustomIsLoading from "components/loading/CustomIsLoading";
 
 export default function ClientsServicesForm({ clientInfo }) {
   console.log("clientInfo is : ", clientInfo);
@@ -135,7 +136,7 @@ export default function ClientsServicesForm({ clientInfo }) {
   console.log("selectOptionsData is : ", selectOptionsData);
 
   return isLoading ? (
-    <h1>isLoading...</h1>
+    <CustomIsLoading />
   ) : (
     <div className="App">
       {/* <AppBar>

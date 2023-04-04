@@ -17,8 +17,13 @@ export const AuthProvider = ({ children }) => {
     try {
       await csrf();
       const { data } = await AxiosApi.get("/api/user");
-      setUser(data);
-      return data;
+      if (!data) {
+        navigate("/");
+        return data;
+      } else {
+        setUser(data);
+        return data;
+      }
     } catch (e) {
       console.log("ërror");
     }
@@ -51,7 +56,7 @@ export const AuthProvider = ({ children }) => {
       await csrf();
       const response = await AxiosApi.post("/register", data);
       console.log("reponse after creating user : ", response);
-      //   navigate("/");
+      navigate("/");
       setIsLoading(false);
     } catch (e) {
       console.log("register user errors : ", e);

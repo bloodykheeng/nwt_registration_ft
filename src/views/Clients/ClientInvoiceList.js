@@ -44,6 +44,7 @@ import {
 } from "services/invoices/invoices";
 import CustomModal from "components/CustomModal/CustomModal";
 import InvoiceLayout from "components/invoice/InvoiceLayout";
+import CustomIsLoading from "components/loading/CustomIsLoading";
 
 function ClientInvoiceList({ clientInfo }) {
   const [openInvoiceModal, setOpenInvoiceNodal] = useState();
@@ -104,7 +105,8 @@ function ClientInvoiceList({ clientInfo }) {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      defaultSort: "desc"
     },
     {
       title: "Updated At",
@@ -216,7 +218,7 @@ function ClientInvoiceList({ clientInfo }) {
                 There are semantic errors in your data
               </p>
             )}
-            {isLoading && <h1>isLoading...</h1>}
+            {isLoading && <CustomIsLoading />}
             <MuiTable
               tableColumns={tableColumns}
               tableData={invoiceData}

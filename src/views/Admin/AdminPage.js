@@ -31,6 +31,8 @@ import PasswordIcon from "@mui/icons-material/Password";
 import CustomDatePicker from "components/DatePicker/CustomDatePicker";
 import Lottie from "lottie-react";
 import AdminLottie from "../../assets/mylotties/42635-office-administration-isometric-concept.json";
+import CustomIsLoading from "components/loading/CustomIsLoading";
+import { toast } from "react-toastify";
 
 function AdminPage() {
   const columns = [
@@ -64,7 +66,8 @@ function AdminPage() {
         minWidth: 210,
         maxWidth: 210
       },
-      editable: false
+      editable: false,
+      defaultSort: "desc"
     },
     {
       title: "Updated At",
@@ -111,9 +114,11 @@ function AdminPage() {
       console.log("the reponse is : ", response);
       setIsLoading(false);
       getAllAdmins();
+      toast.success("Admin created succesfully");
     } catch (err) {
       setIsLoading(false);
       setErrors(err.response.data);
+      toast.error("There was an error creating admin");
       console.log("error is : ", err);
     }
   };
@@ -124,10 +129,12 @@ function AdminPage() {
       let response = await updateAdmin(data.id, data);
       console.log("the handleRowUpdate reponse is : ", response);
       setIsLoading(false);
+      toast.success("Admin Data Updated Succesfully");
       getAllAdmins();
     } catch (err) {
       setIsLoading(false);
       setErrors(err.response.data);
+      toast.error("Ummmm ! There was an error updating Admin Data");
       console.log("error handleRowUpdate is : ", err);
     }
   };
@@ -137,11 +144,13 @@ function AdminPage() {
       setIsLoading(true);
       let response = await deleteAdmin(data.id);
       console.log("the handleRowDelete reponse is : ", response);
+      toast.success("Ohh Yah ! Admin Deleted");
       setIsLoading(false);
       getAllAdmins();
     } catch (err) {
       setIsLoading(false);
       setErrors(err.response.data);
+      toast.success("huh ! There was an error deleting Admin");
       console.log("error handleRowDelete is : ", err);
     }
   };
@@ -154,8 +163,9 @@ function AdminPage() {
             animationData={AdminLottie}
             style={{
               objectFit: "cover",
-              width: "20%",
-              marginLeft: "20rem"
+              width: "50%",
+              marginLeft: "20rem",
+              marginTop: "-5rem"
             }}
             loop={true}
             autoplay={true}
@@ -171,6 +181,7 @@ function AdminPage() {
               <CardHeader className="border-0">
                 <h3 className="mb-0">Administrators</h3>
               </CardHeader>
+              {isLoading && <CustomIsLoading />}
               {errors && (
                 <p style={{ color: "red" }}>
                   There are semantic errors in your data

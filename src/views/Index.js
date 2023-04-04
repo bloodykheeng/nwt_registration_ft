@@ -53,6 +53,7 @@ import Lottie from "lottie-react";
 import Ocean from "../assets/mylotties/56961-underwater-ocean-fish-and-turtle (1).json";
 
 import { getAllClientDetails } from "services/client-details/client-details";
+import CustomIsLoading from "components/loading/CustomIsLoading";
 
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
@@ -139,7 +140,7 @@ const Index = (props) => {
                     Clients
                   </CardTitle>
                   <span className="h2 font-weight-bold mb-0">
-                    {ClientData ? ClientData.length : "Loading..."}
+                    {ClientData ? ClientData.length : <CustomIsLoading />}
                   </span>
                 </div>
                 <Col className="col-auto">

@@ -46,6 +46,7 @@ import {
   getAllInvoiceAddress,
   updateInvoiceAddress
 } from "services/invoice-address/invoice-address";
+import CustomIsLoading from "components/loading/CustomIsLoading";
 
 export default function InvoiceDefinitionForm() {
   const [invoiceAddressData, setInvoiceAddressData] = useState([]);
@@ -164,7 +165,7 @@ export default function InvoiceDefinitionForm() {
         </toolbar>
       </AppBar> */}
           <CardHeader className="border-0">
-            {isLoading && <h1>isLoading...</h1>}
+            {isLoading && <CustomIsLoading />}
             Define the Invoice Params
             {formvalidation && (
               <small style={{ color: "red" }}>{formvalidation.message}</small>
